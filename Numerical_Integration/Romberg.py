@@ -25,15 +25,11 @@ def Romberg(a, b, N, n):
     for i in range(n):
         N_new = N*(2**i) #increase sub-intervals by a factor of 2
         I[i] = Trapezoidal(a, b, N_new)
-        
-    print(I)
-        
-    
+           
     for i in range(1, n):
         for j in range(n-1):
             
             I[j] = ((4**i)*I[j+1] - I[j])/((4**i)-1)
-        print(I)
     
     integral = I[0]
     
