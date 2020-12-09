@@ -10,7 +10,7 @@ def v_(L, u, v, x):
     
     z = #Function for Y'' in Y' and Y
     
-    return float(-u-x)
+    return float(z)
 
 def F(y, x): #Return f
     
@@ -99,7 +99,8 @@ def Shooting_Method(x, x_f, h, a, b, v1, v2, e, i_max):
     pl.prutorsaveplot(plt, 'plot2d.pdf')
     
     return None
-        
+
+L = 4.0
 x_initial = 0.0
 x_final = 4.0
 h = 0.1
