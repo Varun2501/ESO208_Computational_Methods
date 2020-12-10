@@ -18,9 +18,13 @@ def r(x):
 def s(x):
     return 2*(x+1) + 3*r(x)
 
-def Thomas_Algo(L, D, U, B): #Perform Thomas Algorithm
+def Thomas_Algo(L, D, U, B, flag): #Perform Thomas Algorithm
     
-    n = len(L)
+    if flag:
+        n = len(L)-1
+    else:
+        n = len(L)
+        
     P = np.zeros(n)
     Q = np.zeros(n)
     
@@ -44,48 +48,65 @@ def Thomas_Algo(L, D, U, B): #Perform Thomas Algorithm
 def Direct_Method(a, b, h, l, flag):
     
     n = int(l/h) 
-    x = np.arange(n)*h
-    print(x)
+    x = np.arange(n+1)*h
     
-    L = np.zeros(n-1)
-    D = np.zeros(n-1)
-    U = np.zeros(n-1)
-    B = np.zeros(n-1)
+    L = np.zeros(n)
+    D = np.zeros(n)
+    U = np.zeros(n)
+    B = np.zeros(n)
     
-    for i in range(0, n-1):
+    for i in range(0, n):
         L[i] = p(x[i+1])/(h**2) - (q(x[i+1])/(2*h))
         
-    for i in range(0, n-1):
+    for i in range(0, n):
         D[i] = -2*p(x[i+1])/(h**2) + r(x[i+1])
         
-    for i in range(0, n-1):
+    for i in range(0, n):
         U[i] = p(x[i+1])/(h**2) + (q(x[i+1])/(2*h))
         
-    for i in range(0, n-1):
+    for i in range(0, n):
         B[i] = s(x[i+1])
 
     
     B[0] = B[0] - L[0]*a
-    #B[n-2] = B[n-2] - U[n-2]*b
-    
-    
+
     if flag == 1:
         print('Backward Difference')
         L[n-2] = L[n-2] - (U[n-2]/3)
         D[n-2] = D[n-2] + (4*U[n-2]/3)
         B[n-2] = B[n-2] - (2*U[n-2]*b*h/3)
-    print(2*U[n-2]*b*h/3)
-    L[0] = U[n-2] = 0
+
+        L[0] = U[n-1] = L[n-1] = D[n-1] = B[n-1] = 0
+
+        Y = np.array(a)
+        Y = np.append(Y, Thomas_Algo(L, D, U, B, flag))
+        Yn = (2*b*h/3) + (4*Y[-1]/3) - (Y[-2]/3)
+        Y = np.append(Y, Yn)
+        print(Y)
+        print(x)
+        
+    if flag == 0:
+        
+        print('Ghost Node')
+        L[n-1] = L[n-1] + U[n-1]
+        B[n-1] = B[n-1] - (2*U[n-1]*b*h)
+        L[0] = U[n-1] = 0
     
-    X = Thomas_Algo(L, D, U, B)
-    #print(L, D, U, B)
+        Y = Thomas_Algo(L, D, U, B, flag)
+        Y = np.array(a)
+        Y = np.append(Y, Thomas_Algo(L, D, U, B, flag))
+        print(Y)
+        print(x)
+        
+    plt.plot(X, Y)
+    plt.scatter(X, Y, c='k')
+    pl.prutorsaveplot(plt, 'plot2d.pdf')
     
-    print(X)
-    
-a = 5
-b = 0
+#notations as per slides
+a = 5 #Y(0)
+b = 0 #Y'(L)
 L = 2
 h = 0.5
-flag = 1
+flag = 0
 
 Direct_Method(a, b, h, L, flag)
